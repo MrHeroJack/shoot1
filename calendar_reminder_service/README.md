@@ -33,6 +33,13 @@ calendar_reminder_service/
 └── README.md                   # This file
 ```
 
+4.  (可选) 打开前端页面：
+    ```bash
+    cd ../../frontend
+    python -m http.server 8080
+    ```
+    然后访问 `http://localhost:8080/index.html` 使用图形界面管理约会。
+
 ## 环境要求
 
 *   Python 3.x

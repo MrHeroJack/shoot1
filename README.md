@@ -16,6 +16,13 @@
    python app.py
    ```
    根据界面提示即可管理日程与提醒。
+3. 使用前端頁面（可選）：
+   ```bash
+   cd frontend
+   python -m http.server 8080
+   ```
+   在瀏覽器打開 `http://localhost:8080/index.html` 即可通過 Vue 頁面管理日程。
+
    
 2. 启动簡易 API 服務（可選）：
    ```bash

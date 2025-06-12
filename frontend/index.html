@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <title>日程提醒服务</title>
+    <!-- 使用 CDN 引入 Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { margin-bottom: 20px; }
+        label { display: block; margin-top: 10px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>日程提醒服务</h1>
+    <form @submit.prevent="addAppointment">
+        <label>标题：<input v-model="newAppt.title" required></label>
+        <label>日期：<input type="date" v-model="newAppt.date" required></label>
+        <label>时间：<input type="time" v-model="newAppt.time" required></label>
+        <label>地点：<input v-model="newAppt.location"></label>
+        <label>描述：<input v-model="newAppt.description"></label>
+        <button type="submit">新增约会</button>
+    </form>
+
+    <h2>约会列表</h2>
+    <table>
+        <thead>
+            <tr><th>标题</th><th>日期</th><th>时间</th><th>地点</th><th>描述</th></tr>
+        </thead>
+        <tbody>
+            <tr v-for="item in appointments" :key="item.id">
+                <td>{{ item.title }}</td>
+                <td>{{ item.date }}</td>
+                <td>{{ item.time }}</td>
+                <td>{{ item.location }}</td>
+                <td>{{ item.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>到期提醒</h2>
+    <ul>
+        <li v-for="item in dueReminders" :key="item.id">
+            {{ item.title }} - {{ item.reminder_time }}
+        </li>
+    </ul>
+</div>
+
+<script>
+const { createApp } = Vue;
+createApp({
+    data() {
+        return {
+            appointments: [],
+            dueReminders: [],
+            newAppt: {
+                title: '',
+                date: '',
+                time: '',
+                location: '',
+                description: ''
+            }
+        };
+    },
+    mounted() {
+        this.fetchAppointments();
+        this.fetchDueReminders();
+    },
+    methods: {
+        fetchAppointments() {
+            fetch('/api/appointments')
+                .then(r => r.json())
+                .then(data => { this.appointments = data; });
+        },
+        fetchDueReminders() {
+            fetch('/api/reminders/due')
+                .then(r => r.json())
+                .then(data => { this.dueReminders = data; });
+        },
+        addAppointment() {
+            fetch('/api/appointments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(this.newAppt)
+            })
+            .then(r => r.json())
+            .then(() => {
+                this.fetchAppointments();
+                this.newAppt = { title: '', date: '', time: '', location: '', description: '' };
+            });
+        }
+    }
+}).mount('#app');
+</script>
+</body>
+</html>
