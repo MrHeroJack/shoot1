@@ -1,6 +1,6 @@
 # 日程提醒服务
 
-一个用于管理约会和提醒的简易命令行应用。
+一个用于管理约会和提醒的简易命令行应用，也提供基于 http.server 的輕量級 API。
 
 ## 功能
 
@@ -21,7 +21,8 @@ calendar_reminder_service/
 │   ├── app.py                  # 主命令行入口
 │   ├── appointments.py         # 约会管理逻辑
 │   ├── calendar_utils.py       # 预留的日历工具模块
-│   └── reminders.py            # 提醒管理逻辑
+│   ├── reminders.py            # 提醒管理逻辑
+│   └── api_server.py           # 提供 HTTP API
 ├── tests/
 │   ├── __init__.py
 │   ├── test_appointments.py    # 约会单元测试
@@ -48,6 +49,12 @@ calendar_reminder_service/
     python app.py
     ```
     运行后即可通过命令行与服务交互。
+
+3.  (可选) 启动 API 服務：
+    ```bash
+    python -m calendar_reminder_service.src.api_server
+    ```
+    成功啟動後可通過 HTTP 接口操作約會資料。
 
 ## 如何运行单元测试
 
