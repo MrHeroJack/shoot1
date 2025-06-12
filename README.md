@@ -16,14 +16,13 @@
    python app.py
    ```
    根据界面提示即可管理日程与提醒。
-
+   
 2. 启动簡易 API 服務（可選）：
    ```bash
    python -m calendar_reminder_service.src.api_server
    ```
    服務啟動後，可通過 HTTP 請求管理約會和提醒。
    更詳細的接口示例請參見 `API_GUIDE.md`。
-
 ## 运行单元测试
 
 在项目根目录下执行：
@@ -40,3 +39,4 @@ python -m unittest discover calendar_reminder_service/tests
 ```bash
 git remote add origin https://github.com/MrHeroJack/shoot1.git
 ```
+=======
