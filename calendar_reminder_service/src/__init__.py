@@ -1,1 +1,1 @@
-# This is the __init__.py file for the src package.
+# src 包的 __init__.py 文件

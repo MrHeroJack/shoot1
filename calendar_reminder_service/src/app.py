@@ -1,13 +1,14 @@
-from .appointments import add_appointment, get_appointments_on_date, load_appointments # Added load_appointments for handle_set_reminder
+from .appointments import add_appointment, get_appointments_on_date, load_appointments # 用于设置提醒时加载数据
 from .reminders import set_reminder, check_reminders
-from datetime import datetime # For input validation and formatting
+from datetime import datetime # 输入校验与格式化
 
 def print_appointment(appt: dict):
-    """Helper function to print appointment details consistently."""
+    """辅助函数：统一格式打印约会详情"""
     print(f"  ID: {appt.get('id')}")
     print(f"  Title: {appt.get('title')}")
     print(f"  Date: {appt.get('date')}")
     print(f"  Time: {appt.get('time')}")
+    print(f"  Location: {appt.get('location', 'N/A')}")
     print(f"  Description: {appt.get('description', 'N/A')}")
     print(f"  Reminder Set: {'Yes' if appt.get('reminder_set') else 'No'}")
     if appt.get('reminder_set'):
@@ -15,7 +16,7 @@ def print_appointment(appt: dict):
     print("-" * 20)
 
 def handle_add_appointment():
-    """Handles adding a new appointment."""
+    """处理新增约会"""
     print("\n--- Add New Appointment ---")
     title = input("Enter appointment title: ")
     while not title:
@@ -23,7 +24,7 @@ def handle_add_appointment():
         title = input("Enter appointment title: ")
 
     date_str = input("Enter date (YYYY-MM-DD): ")
-    # Basic date format validation
+    # 基本日期格式校验
     try:
         datetime.strptime(date_str, "%Y-%m-%d")
     except ValueError:
@@ -31,21 +32,22 @@ def handle_add_appointment():
         return
 
     time_str = input("Enter time (HH:MM): ")
-    # Basic time format validation
+    # 基本时间格式校验
     try:
         datetime.strptime(time_str, "%H:%M")
     except ValueError:
         print("Invalid time format. Please use HH:MM.")
         return
         
+    location = input("Enter location (optional): ")
     description = input("Enter description (optional): ")
 
-    new_appt = add_appointment(title, date_str, time_str, description)
+    new_appt = add_appointment(title, date_str, time_str, description, location)
     print("\nAppointment added successfully:")
     print_appointment(new_appt)
 
 def handle_view_appointments():
-    """Handles viewing appointments for a specific date."""
+    """查看指定日期的约会"""
     print("\n--- View Appointments for a Date ---")
     date_str = input("Enter date to view (YYYY-MM-DD): ")
     try:
@@ -63,9 +65,9 @@ def handle_view_appointments():
         print(f"No appointments found on {date_str}.")
 
 def handle_set_reminder():
-    """Handles setting a reminder for an appointment."""
+    """为约会设置提醒"""
     print("\n--- Set Reminder for an Appointment ---")
-    # Display existing appointments to help user find ID
+    # 展示现有约会供用户选择 ID
     all_appointments = load_appointments()
     if not all_appointments:
         print("No appointments available to set reminders for.")
@@ -82,10 +84,10 @@ def handle_set_reminder():
 
     reminder_datetime_str = input("Enter reminder date and time (YYYY-MM-DD HH:MM): ")
     try:
-        # Validate reminder datetime format
+        # 校验提醒时间格式
         reminder_dt_obj = datetime.strptime(reminder_datetime_str, "%Y-%m-%d %H:%M")
         
-        # Optional: Check if reminder time is before appointment time
+        # 可选：检查提醒时间是否早于约会时间
         selected_appt = next((appt for appt in all_appointments if appt['id'] == appointment_id), None)
         if selected_appt:
             appointment_dt_str = f"{selected_appt['date']} {selected_appt['time']}"
@@ -93,7 +95,7 @@ def handle_set_reminder():
             if reminder_dt_obj >= appointment_dt_obj:
                 print("Reminder time must be before the appointment time. Please try again.")
                 return
-        else: # Should not happen due to check above, but as a safeguard
+        else: # 理论上不会发生，作为安全检查
             print("Could not retrieve appointment details for validation.")
             return
 
@@ -103,7 +105,7 @@ def handle_set_reminder():
 
     if set_reminder(appointment_id, reminder_datetime_str):
         print("Reminder set successfully!")
-        # Show updated appointment details
+        # 显示更新后的约会信息
         updated_appointments = load_appointments()
         for appt in updated_appointments:
             if appt['id'] == appointment_id:
@@ -114,7 +116,7 @@ def handle_set_reminder():
         print("Failed to set reminder. Ensure the appointment ID is correct and datetime format is valid.")
 
 def handle_check_reminders():
-    """Handles checking for and displaying due reminders."""
+    """检查并显示到期提醒"""
     print("\n--- Check Due Reminders ---")
     due_reminders = check_reminders()
     if due_reminders:
@@ -126,7 +128,7 @@ def handle_check_reminders():
         print("No reminders are currently due.")
 
 def main_cli():
-    """Main command-line interface loop."""
+    """主命令行循环"""
     print("Welcome to the Calendar Reminder Service!")
     while True:
         print("\nMenu:")
