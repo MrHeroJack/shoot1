@@ -32,3 +32,11 @@ python -m unittest discover calendar_reminder_service/tests
 ```
 
 本项目仅依赖 Python 标准库，所有数据存储在 `calendar_reminder_service/data/appointments.json`。
+
+## 远程仓库
+
+此项目最初克隆自 GitHub，如果在本地仓库中看不到远程地址，可运行以下命令重新添加：
+
+```bash
+git remote add origin https://github.com/MrHeroJack/shoot1.git
+```
